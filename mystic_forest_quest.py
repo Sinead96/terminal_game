@@ -60,16 +60,28 @@ def faerie_circle():
             print('You trip! The faeries giggle as you tumble into the Bramble Maze!')
             player['location'] = 'bramble_maze'
 def ancient_ruins():
-    print('\nCrumbling pillars surround a stone altar. A rusty amulet lies in the dust, and a narrow tunnel leads deeper.\n')
+    print('\nCrumbling pillars surround a stone altar. A rusty amulet rests behind an eerie glowing barrier. A narrow tunnel leads deeper.\n')
     print('Do you:\n'
-          '1) Take the amulet\n'
+          '1) Attempt to retrieve the amulet\n'
           '2) Enter the tunnel\n'
           '3) Search the ruins for clues')
     answer = int(input('Choose your path (1-3): '))
     if answer == 1:
-        print('You have found an amulet! You move to the Altar Chamber.')
-        player['inventory'].append('Amulet')
-        player['location'] = 'altar_chamber'
+        print('\nAs you approach the amulet, ancient runes light up. A voice whispers: "Answer me this, and the amulet is yours."\n')
+        print('"I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?"')
+        riddle_answer = input('Your answer: ').strip().lower()
+        if 'map' in riddle_answer:
+            print('The runes flicker and fade. The barrier vanishes, and the amulet is yours.')
+            player['inventory'].append('Amulet')
+            player['location'] = 'altar_chamber'
+        else:
+            print('The runes flare with red light. A pulse of energy knocks you back. You lose some energy.')
+            player['energy'] -= 3
+            if player['energy'] <= 0:
+                print('The impact drains your last strength.\nGAME OVER.')
+                exit()
+            else:
+                print('You stagger back. Perhaps there is another way.')
     elif answer == 2:
         print('You enter the dark, narrow tunnel. It leads deeper into the ruins... You have exhausted yourself and lost some energy.')
         player['location'] = 'underground_chamber'
@@ -180,7 +192,7 @@ def bramble_maze():
             print('The maze grows darker. No one comes. You are lost forever.\nGAME OVER!')
             exit()
 # Start the game
-print('Welcome to Mystic Forest Quest! Find the Crystal of Dawn to save your village.')
+print('Welcome to **Mystic Forest Quest**! Find the Crystal of Dawn to save your village.')
 forest_entrance()
 # Main game loop
 while True:
@@ -200,6 +212,18 @@ while True:
         bramble_maze()
     elif player['location'] == 'forest_entrance':
         forest_entrance()
+    elif player['location'] == 'altar_chamber':
+        print('\nYou step into the Altar Chamber. Strange carvings glow faintly, but it seems there’s nothing more here for now.')
+        player['location'] = 'forest_entrance'
+    elif player['location'] == 'underground_chamber':
+        print('\nThe narrow tunnel opens into an underground chamber. It’s eerily silent. You return to the surface.')
+        player['location'] = 'forest_entrance'
+    elif player['location'] == 'abandoned_tower':
+        print('\nYou rest briefly in the tower. Nothing more to find here.')
+        player['location'] = 'forest_entrance'
+    elif player['location'] == 'mystery_path':
+        print('\nThe path twists strangely, returning you to the forest entrance.')
+        player['location'] = 'forest_entrance'
     else:
         print('\nYou wander into unknown territory and vanish...\nGAME OVER!')
         break
